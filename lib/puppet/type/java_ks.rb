@@ -36,7 +36,11 @@ module Puppet
             return true if is == :absent
           when :latest
             unless is == :absent
-              return true if provider.latest == provider.current
+              if noop
+                notice "Noop Mode - Would have verified that the certificate is up to date"
+              else
+                return true if provider.latest == provider.current
+              end
             end
           end
         end

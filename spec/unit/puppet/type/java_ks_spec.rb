@@ -132,6 +132,13 @@ describe Puppet::Type.type(:java_ks) do
       @provider.stubs(:current).returns('AF:61:1C:FF:C7:C0:B2:C6:37:C5:D1:6E:00:AB:7A:B2')
       expect(Puppet::Type.type(:java_ks).new(jks).property(:ensure).insync?(:present)).to be_truthy
     end
+
+    it 'insync? should return false as the md5 fingerprints are unavailable, state is :present, and noop is true' do
+      jks = jks_resource.dup
+      jks[:ensure] = :latest
+      Puppet[:noop] = true
+      expect(Puppet::Type.type(:java_ks).new(jks).property(:ensure).insync?(:present)).to be_falsey
+    end
   end
 
   describe 'when file resources are in the catalog' do
